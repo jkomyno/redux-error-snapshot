@@ -38,10 +38,9 @@ describe('reducer', () => {
       args: [],
     };
 
-    expect(reducer(undefined, {
+    expect(reducer(undefined, Object.assign({
       type: 'RANDOM_ERROR_TYPE',
-      ...expectedState,
-    })).toEqual(expectedState);
+    }, expectedState))).toEqual(expectedState);
     expect(expectedState.action).not.toBeCalled();
   });
 });
@@ -117,10 +116,9 @@ describe('freeze-error-state', () => {
     const store = mockStore();
     store.dispatch(mockedAction.apply(null, args));
 
-    expect(store.getActions()).toEqual([{
+    expect(store.getActions()).toEqual([Object.assign({
       type: 'RANDOM_ERROR_TYPE',
-      ...expectedAction,
-    }]);
+    }, expectedAction)]);
   });
 
   it ('should retrieve last action, arguments and error message', () => {
@@ -132,10 +130,9 @@ describe('freeze-error-state', () => {
 
     const expectedActions = [
       expectedResetAction,
-      {
+      Object.assign({
         type: 'RANDOM_ERROR_TYPE',
-        ...expectedAction,
-      },
+      }, expectedAction),
     ];
     expect(newStore.getActions()).toEqual(expectedActions);
   });
