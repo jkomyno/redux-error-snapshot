@@ -10,14 +10,15 @@ export const resetErrorState = () => ({
   type: RESET_ERROR_STATE,
 });
 
-export const retryLastAction = (reducerName: string | null = defaultReducerName):
+export const retryLastAction = (reducerName: string | null = null):
   ThunkAction<void, {reducerName: lastActionType}> =>
   (dispatch, getState) => {
-    /*
+    // necessary since in react native after dispatch you automatically have a
+    // Proxy Event as first argument
     if (typeof reducerName !== 'string') {
-      reducerName = 'freezeErrorState';
+      // eslint-disable-next-line no-param-reassign
+      reducerName = defaultReducerName;
     }
-    */
     const {
       action,
       args,
