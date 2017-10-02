@@ -1,6 +1,6 @@
 {
   "name": "redux-error-snapshot",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Redux thunk utility that aims to ease the process of retrying last failed action",
   "main": "./lib/index.js",
   "scripts": {
@@ -20,7 +20,9 @@
     "collectCoverage": true
   },
   "files": [
-    "./lib"
+    "lib",
+    "LICENSE",
+    "README.md"
   ],
   "keywords": [
     "redux",
