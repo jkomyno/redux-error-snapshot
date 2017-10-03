@@ -1,3 +1,4 @@
+// @flow
 import configureStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
 import {
@@ -16,12 +17,8 @@ const mockStore = configureStore([thunk]);
 
 describe('reducer', () => {
   it ('should return the initial state', () => {
-    expect(reducer(undefined, {})).toEqual(initialState);
-  });
-
-  it ('should not affect state', () => {
     expect(reducer(undefined, {
-      type: 'RANDOM_ERROR_TYPE',
+      type: 'RANDOM_TYPE',
     })).toEqual(initialState);
   });
 
@@ -36,9 +33,11 @@ describe('reducer', () => {
       args: [],
     };
 
-    expect(reducer(undefined, Object.assign({
+    const mockedActionResult = Object.assign({}, {
       type: 'RANDOM_ERROR_TYPE',
-    }, expectedState))).toEqual(expectedState);
+    }, expectedState);
+
+    expect(reducer(undefined, mockedActionResult)).toEqual(expectedState);
     expect(expectedState.action).not.toBeCalled();
   });
 });
@@ -82,6 +81,11 @@ describe('actions', () => {
 });
 
 describe('core', () => {
+  const meta =  {
+    cause: 'Something happened',
+    code: 123,
+  };
+
   const mockedAction = (arg1, arg2, arg3) => (
     dispatch => {
       try {
@@ -97,6 +101,7 @@ describe('core', () => {
             arg2,
             arg3,
           ],
+          meta,
         })
       }
     }
@@ -106,7 +111,11 @@ describe('core', () => {
     error: 'Something went wrong',
     action: mockedAction,
     args,
+    meta,
   };
+  const mockedActionResult = Object.assign({}, {
+    type: 'RANDOM_ERROR_TYPE',
+  }, expectedAction);
 
   it (`should send a thunk which will throw, and the catched error will be dispatched along
       with the action that threw and its arguments`, () => {
@@ -114,12 +123,10 @@ describe('core', () => {
     const store = mockStore();
     store.dispatch(mockedAction.apply(null, args));
 
-    expect(store.getActions()).toEqual([Object.assign({
-      type: 'RANDOM_ERROR_TYPE',
-    }, expectedAction)]);
+    expect(store.getActions()).toEqual([mockedActionResult]);
   });
 
-  it ('should retrieve last action, arguments and error message', () => {
+  it ('should retrieve last action, arguments, error message and meta', () => {
     const newStore = mockStore({
       [defaultReducerName]: expectedAction,
     });
@@ -128,9 +135,7 @@ describe('core', () => {
 
     const expectedActions = [
       expectedResetAction,
-      Object.assign({
-        type: 'RANDOM_ERROR_TYPE',
-      }, expectedAction),
+      mockedActionResult,
     ];
     expect(newStore.getActions()).toEqual(expectedActions);
   });

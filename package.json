@@ -38,6 +38,7 @@
     "babel-eslint": "^8.0.1",
     "babel-jest": "^21.0.2",
     "babel-plugin-minify-constant-folding": "^0.2.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.0",
     "babel-preset-flow": "^6.23.0",
     "codecov": "^2.3.0",
@@ -54,8 +55,8 @@
   "dependencies": {
     "redux-thunk": "^2.2.0"
   },
-  "repository" : {
-    "type" : "git",
-    "url" : "https://github.com/jkomyno/redux-error-snapshot.git"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jkomyno/redux-error-snapshot.git"
   }
 }

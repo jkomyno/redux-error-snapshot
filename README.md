@@ -42,14 +42,12 @@ It contains the snapshot of the last catched error situation in the app, so you 
 - `error`: the error message
 - `action`: the function that failed last time
 - `args`: the same arguments passed to the action that failed
-- `possibleReasons`: if you need, you can manually store an array of possible reasons of the error `error` here, for instance to display them to the user
+- `...otherProps`: every other property your error'd action returns, is going to be passed to the reducer as well
 
 The initialState of the reducer is defined as following:
 
 ```js
-initialState = {
-  possibleReasons: [],
-};
+initialState = {};
 ```
 
 ### Actions

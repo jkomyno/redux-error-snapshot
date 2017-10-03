@@ -6,7 +6,7 @@ import type {
 } from './types';
 
 export const initialState = {
-  possibleReasons: [],
+  
 };
 
 export default (state: snapshotError = initialState, lastAction: lastActionType) => {
@@ -15,7 +15,7 @@ export default (state: snapshotError = initialState, lastAction: lastActionType)
     error,
     action,
     args,
-    possibleReasons,
+    ...otherProps,
   } = lastAction;
 
   if (type === RESET_ERROR_STATE) {
@@ -25,7 +25,7 @@ export default (state: snapshotError = initialState, lastAction: lastActionType)
       error,
       action,
       args,
-      possibleReasons,
+      ...otherProps,
     };
   }
 

@@ -8,6 +8,7 @@
     }]
   ],
   "plugins": [
-    "minify-constant-folding"
+    "minify-constant-folding",
+    "transform-object-rest-spread"
   ]
 }
