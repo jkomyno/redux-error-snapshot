@@ -81,7 +81,7 @@ describe('actions', () => {
   });
 });
 
-describe('freeze-error-state', () => {
+describe('core', () => {
   const mockedAction = (arg1, arg2, arg3) => (
     dispatch => {
       try {

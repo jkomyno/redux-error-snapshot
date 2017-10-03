@@ -8,6 +8,7 @@
     "prebuild": "npm run clean",
     "build": "babel src/ -d lib/",
     "postbuild": "flow-copy-source ./src ./lib",
+    "build:watch": "npm run build -- -w",
     "lint": "eslint ./src",
     "flow": "flow",
     "test": "jest",

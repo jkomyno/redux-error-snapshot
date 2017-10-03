@@ -40,8 +40,15 @@ It contains the snapshot of the last catched error situation in the app, so you 
 - `error`: the error message
 - `action`: the function that failed last time
 - `args`: the same arguments passed to the action that failed
+- `possibleReasons`: if you need, you can manually store an array of possible reasons of the error `error` here, for instance to display them to the user
 
-Its initial state is null.
+The initialState of the reducer is defined as following:
+
+```js
+initialState = {
+  possibleReasons: [],
+};
+```
 
 ### Actions
 
@@ -52,7 +59,7 @@ import {
 } from 'redux-error-snapshot';
 ```
 
-- `resetErrorState`: sets the errorSnapshot reducer to null, returning the type `RESET_ERROR_STATE`.
+- `resetErrorState`: sets the errorSnapshot reducer to `initialState`, returning the type `RESET_ERROR_STATE`.
 - `retryLastAction`: dispatches the action saved in the errorSnapshot reducer. If you have decided to import
 the reducer with a name different than `errorSnapshot`, you can pass its name as argument. E.g.:
 
@@ -75,6 +82,7 @@ opening a Pull Request.
 
 - `clean`: Deletes the compiled lib folder;
 - `build`: Runs the clean script, transpiles the code with babel to the lib folder and copies the flow references;
+- `build:watch`: Runs the build script in watch mode
 - `lint`: Runs eslint
 - `flow`: Verifies if there are flow errors;
 - `test`: Runs the test suites with jest;
