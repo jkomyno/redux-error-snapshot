@@ -9,6 +9,8 @@ Redux thunk utility that aims to ease the process of retrying last failed action
 [![npm](https://img.shields.io/npm/dm/redux-error-snapshot.svg)](https://npmjs.com/package/redux-error-snapshot)
 [![Issue Stats](https://img.shields.io/issuestats/i/github/jkomyno/redux-error-snapshot.svg)](http://github.com/jkomyno/redux-error-snapshot/issues)
 
+Since v1.0.1 this package follows the rules of [Semantic versioning](http://semver.org/).
+
 ## Install
 
 - `yarn add redux-error-snapshot`
