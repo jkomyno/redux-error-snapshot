@@ -4,7 +4,7 @@ import {
   resetErrorState,
   retryLastAction,
 } from '../src/actions';
-import reducer from '../src/reducer';
+import reducer, { initialState } from '../src/reducer';
 import { RESET_ERROR_STATE } from '../src/reduxTypes';
 import { defaultReducerName } from '../src/config';
 
@@ -15,8 +15,6 @@ const expectedResetAction = {
 const mockStore = configureStore([thunk]);
 
 describe('reducer', () => {
-  const initialState = null;
-
   it ('should return the initial state', () => {
     expect(reducer(undefined, {})).toEqual(initialState);
   });
@@ -28,7 +26,7 @@ describe('reducer', () => {
   });
 
   it ('should reset the reducer', () => {
-    expect(reducer(undefined, resetErrorState())).toEqual(null);
+    expect(reducer(undefined, resetErrorState())).toEqual(initialState);
   });
 
   it ('should return an object with props `error`, `action`, `args`', () => {

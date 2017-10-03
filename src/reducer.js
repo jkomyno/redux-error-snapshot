@@ -5,21 +5,27 @@ import type {
   lastActionType,
 } from './types';
 
-export default (state: snapshotError | null = null, lastAction: lastActionType) => {
+export const initialState = {
+  possibleReasons: [],
+};
+
+export default (state: snapshotError = initialState, lastAction: lastActionType) => {
   const {
     type,
     error,
     action,
     args,
+    possibleReasons,
   } = lastAction;
 
   if (type === RESET_ERROR_STATE) {
-    return null;
+    return initialState;
   } else if (error) {
     return {
       error,
       action,
       args,
+      possibleReasons,
     };
   }
 
