@@ -11,7 +11,7 @@
     "build:watch": "npm run build -- -w",
     "lint": "eslint ./src",
     "flow": "flow",
-    "test": "jest",
+    "test": "jest --env=node",
     "test:watch": "npm test -- --watch",
     "test:cov": "npm test && codecov",
     "test:ci": "npm run lint && npm run flow && npm run test:cov"
