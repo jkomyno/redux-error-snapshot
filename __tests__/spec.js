@@ -26,11 +26,12 @@ describe('reducer', () => {
     expect(reducer(undefined, resetErrorState())).toEqual(initialState);
   });
 
-  it ('should return an object with props `error`, `action`, `args`', () => {
+  it ('should return an object with props `error`, `action`, `args`, `meta`', () => {
     const expectedState = {
       error: 'randomError',
       action: jest.fn(),
       args: [],
+      meta: {},
     };
 
     const mockedActionResult = Object.assign({}, {

@@ -5,7 +5,9 @@ import type {
   lastActionType,
 } from './types';
 
-export const initialState = {};
+export const initialState = {
+  meta: {},
+};
 
 export default (state: snapshotError = initialState, lastAction: lastActionType) => {
   const {
@@ -13,7 +15,7 @@ export default (state: snapshotError = initialState, lastAction: lastActionType)
     error,
     action,
     args,
-    ...otherProps
+    meta,
   } = lastAction;
 
   if (type === RESET_ERROR_STATE) {
@@ -23,7 +25,10 @@ export default (state: snapshotError = initialState, lastAction: lastActionType)
       error,
       action,
       args,
-      ...otherProps,
+      meta: {
+        ...state.meta,
+        ...meta,
+      },
     };
   }
 

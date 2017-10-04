@@ -42,12 +42,64 @@ It contains the snapshot of the last catched error situation in the app, so you 
 - `error`: the error message
 - `action`: the function that failed last time
 - `args`: the same arguments passed to the action that failed
-- `...otherProps`: every other property your error'd action returns, is going to be passed to the reducer as well
+- `meta`: object which is guaranteed to be never null, but at least `{}`
 
 The initialState of the reducer is defined as following:
 
 ```js
-initialState = {};
+initialState = {
+  meta: {},
+};
+```
+
+#### How to correctly put values in this library's reducer:
+
+```js
+  const yourThunkAction = (arg1, arg2) =>
+    async (dispatch, getState) => {
+      try {
+        // your code here
+      } catch (err) {
+        // example meta structure
+        const meta = {
+          reason: err.message,
+          trace: err.stack,
+        };
+
+        dispatch({
+          type: 'YOUR_ERROR_TYPE',
+          action: yourThunkAction,
+          error: 'Oops, something went wrong while executing yourThunkAction',
+          args: [arg1, arg2],
+          meta,
+        });
+      }
+    }
+```
+
+Note that you can store what you want in `meta`, and since v1.2.1 you can simply access its children without checking that meta isn't null first.
+
+```diff
++import React, { PureComponent } from 'react';
++import { connect } from 'react-redux';
++import { retryLastAction } from 'redux-error-snapshot';
++
++class YourComponent extends PureComponent {
++  
++  getReason = () => {
++    const { meta } = this.props.errorSnapshot;
+-    return meta && meta.reason;
++    return meta.reason;
++  }
++
++  // ...
++}
++
++const mapStateToProps = ({ errorSnapshot }) => ({
++  errorSnapshot,
++});
++
++export default connect(mapStateToProps, { retryLastAction })(YourComponent); 
 ```
 
 ### Actions
