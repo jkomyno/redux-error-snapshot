@@ -15,7 +15,7 @@ Since v1.0.1 this package follows the rules of [Semantic versioning](http://semv
 
 - `yarn add redux-error-snapshot`
 
-Or, if you prefer using npm (but you shoudln't):
+Or, if you prefer using npm ([but you shouldn't](https://medium.com/@kaayru/what-is-yarn-and-should-we-use-it-dbd8c46de6a)):
 
 - `npm i -S redux-error-snapshot`
 
