@@ -1,15 +1,16 @@
 // @flow
 import { RESET_ERROR_STATE } from './reduxTypes';
+import { existsIn } from './utils';
 import type {
-  snapshotError,
-  lastActionType,
+  reducerType,
+  reducerCreatorType,
 } from './types';
 
 export const initialState = {
   meta: {},
 };
 
-export default (state: snapshotError = initialState, lastAction: lastActionType) => {
+const reducer: reducerType = (state = initialState, lastAction) => {
   const {
     type,
     error,
@@ -34,3 +35,15 @@ export default (state: snapshotError = initialState, lastAction: lastActionType)
 
   return state;
 };
+
+export default reducer;
+
+export const reducerCreator: reducerCreatorType = (blacklist = []) =>
+  (state, action) => {
+    // $FlowFixMe
+    if (existsIn(action.type, blacklist)) {
+      return initialState;
+    }
+
+    return reducer(state, action);
+  };

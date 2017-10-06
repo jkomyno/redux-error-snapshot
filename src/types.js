@@ -14,3 +14,8 @@ export type lastActionType = {
   type: string,
   ...snapshotError,
 };
+
+export type reducerType = (state?: snapshotError, lastAction: lastActionType) => snapshotError;
+export type reducerCreatorType = (blacklist?: Array<string>) => reducerType;
+
+export type existsInType = (value: string, array: Array<string>) => bool;

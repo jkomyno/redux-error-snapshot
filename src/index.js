@@ -2,4 +2,4 @@ export {
   resetErrorState,
   retryLastAction,
 } from './actions';
-export { default as reducer } from './reducer';
+export { reducerCreator, default as reducer } from './reducer';

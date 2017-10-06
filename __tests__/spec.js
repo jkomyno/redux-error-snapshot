@@ -5,7 +5,10 @@ import {
   resetErrorState,
   retryLastAction,
 } from '../src/actions';
-import reducer, { initialState } from '../src/reducer';
+import reducer, {
+  initialState,
+  reducerCreator,
+} from '../src/reducer';
 import { RESET_ERROR_STATE } from '../src/reduxTypes';
 import { defaultReducerName } from '../src/config';
 
@@ -140,4 +143,10 @@ describe('core', () => {
     ];
     expect(newStore.getActions()).toEqual(expectedActions);
   });
-})
+});
+
+describe('reducerCreator', () => {
+  it('should be a curried function that returns the reducer state', () => {
+    expect(reducerCreator()(initialState, { type: 'ERROR', error: false })).toEqual(initialState);
+  });
+});
