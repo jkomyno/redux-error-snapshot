@@ -11,9 +11,47 @@ import reducer, {
 } from '../src/reducer';
 import { RESET_ERROR_STATE } from '../src/reduxTypes';
 import { defaultReducerName } from '../src/config';
+import type {
+  lastActionType,
+} from '../src/types';
 
 const expectedResetAction = {
   type: RESET_ERROR_STATE,
+};
+
+const meta =  {
+  cause: 'Something happened',
+  code: 123,
+};
+
+const mockedAction = (arg1, arg2, arg3) => (
+  dispatch => {
+    try {
+      // ...
+      throw new Error('Something went wrong');
+    } catch (error) {
+      dispatch({
+        type: 'RANDOM_ERROR_TYPE',
+        error: error.message,
+        action: mockedAction,
+        args: [
+          arg1,
+          arg2,
+          arg3,
+        ],
+        meta,
+      })
+    }
+  }
+);
+
+const args = [1, 2, 3];
+
+const expectedAction = {
+  error: 'Something went wrong',
+  action: mockedAction,
+  args,
+  meta,
 };
 
 const mockStore = configureStore([thunk]);
@@ -85,38 +123,7 @@ describe('actions', () => {
 });
 
 describe('core', () => {
-  const meta =  {
-    cause: 'Something happened',
-    code: 123,
-  };
 
-  const mockedAction = (arg1, arg2, arg3) => (
-    dispatch => {
-      try {
-        // ...
-        throw new Error('Something went wrong');
-      } catch (error) {
-        dispatch({
-          type: 'RANDOM_ERROR_TYPE',
-          error: error.message,
-          action: mockedAction,
-          args: [
-            arg1,
-            arg2,
-            arg3,
-          ],
-          meta,
-        })
-      }
-    }
-  );
-  const args = [1, 2, 3];
-  const expectedAction = {
-    error: 'Something went wrong',
-    action: mockedAction,
-    args,
-    meta,
-  };
   const mockedActionResult = Object.assign({}, {
     type: 'RANDOM_ERROR_TYPE',
   }, expectedAction);
@@ -147,6 +154,23 @@ describe('core', () => {
 
 describe('reducerCreator', () => {
   it('should be a curried function that returns the reducer state', () => {
-    expect(reducerCreator()(initialState, { type: 'ERROR', error: false })).toEqual(initialState);
+    const action: lastActionType = {
+      type: 'ERROR',
+    };
+    expect(reducerCreator()(initialState, action)).toEqual(initialState);
+  });
+
+  it('should prevent certain types patterns to be captured by the reducer', () => {
+    const blacklist = ['@@redux-form/*', 'NAVIGATION/Back'];
+
+    expect(reducerCreator(blacklist)(initialState, Object.assign({},
+      expectedAction, { type: 'ERROR' },
+    )))
+      .toEqual(expectedAction);
+
+    expect(reducerCreator(blacklist)(initialState, Object.assign({},
+      expectedAction, { type: '@@redux-form/STOP_SUBMIT' },
+    )))
+      .toEqual(initialState);
   });
 });
