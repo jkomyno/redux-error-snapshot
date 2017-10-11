@@ -11,7 +11,7 @@ export type snapshotErrorType = {
 };
 
 export type lastActionType =
-  & { type: string }
+  & { +type: string }
   & snapshotErrorType;
 
 export type reducerType = (state?: snapshotErrorType, lastAction: lastActionType) =>
