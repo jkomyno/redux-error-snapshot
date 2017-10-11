@@ -1,21 +1,25 @@
 // @flow
-export type { ThunkAction } from 'redux-thunk';
+import type { ThunkAction } from 'redux-thunk';
 
-export type snapshotError = {
-  error?: string,
-  action?: (...args: Array<any>) => void,
-  args?: Array<any>,
-  meta?: {
+export type snapshotErrorType = {
+  +error?: string,
+  +action?: (...args: Array<any>) => ThunkAction,
+  +args?: Array<any>,
+  +meta?: {
     [string]: any,
   },
 };
 
-export type lastActionType = {
-  type: string,
-  ...snapshotError,
-};
+export type lastActionType =
+  & { type: string }
+  & snapshotErrorType;
 
-export type reducerType = (state?: snapshotError, lastAction: lastActionType) => snapshotError;
+export type reducerType = (state?: snapshotErrorType, lastAction: lastActionType) =>
+  snapshotErrorType;
+
 export type reducerCreatorType = (blacklist?: Array<string>) => reducerType;
 
 export type existsInType = (value: string, array: Array<string>) => bool;
+
+export type retryLastActionType = (reducerName: string | void) =>
+  ThunkAction<void, {reducerName: lastActionType}>

@@ -40,7 +40,6 @@ export default reducer;
 
 export const reducerCreator: reducerCreatorType = (blacklist = []) =>
   (state, action) => {
-    // $FlowFixMe
     if (existsIn(action.type, blacklist)) {
       return initialState;
     }

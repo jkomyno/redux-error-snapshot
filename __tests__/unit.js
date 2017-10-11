@@ -1,3 +1,4 @@
+// @flow
 import { existsIn } from '../src/utils';
 
 describe('existsIn', () => {

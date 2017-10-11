@@ -162,10 +162,9 @@ describe('reducerCreator', () => {
 
   it('should prevent certain types patterns to be captured by the reducer', () => {
     const blacklist = ['@@redux-form/*', 'NAVIGATION/Back'];
+    const prevAction1: lastActionType = Object.assign({}, expectedAction, { type: 'ERROR' });
 
-    expect(reducerCreator(blacklist)(initialState, Object.assign({},
-      expectedAction, { type: 'ERROR' },
-    )))
+    expect(reducerCreator(blacklist)(initialState, prevAction1))
       .toEqual(expectedAction);
 
     expect(reducerCreator(blacklist)(initialState, Object.assign({},
