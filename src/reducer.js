@@ -4,9 +4,10 @@ import { existsIn } from './utils';
 import type {
   reducerType,
   reducerCreatorType,
+  snapshotErrorType,
 } from './types';
 
-export const initialState = {
+export const initialState: snapshotErrorType = {
   meta: {},
 };
 

@@ -12,19 +12,21 @@ import reducer, {
 import { RESET_ERROR_STATE } from '../src/reduxTypes';
 import { defaultReducerName } from '../src/config';
 import type {
+  genericThunkActionCreatorType,
   lastActionType,
+  snapshotErrorType,
 } from '../src/types';
 
-const expectedResetAction = {
+const expectedResetAction: lastActionType = {
   type: RESET_ERROR_STATE,
 };
 
-const meta =  {
+const meta: $PropertyType<snapshotErrorType, 'meta'> = {
   cause: 'Something happened',
   code: 123,
 };
 
-const mockedAction = (arg1, arg2, arg3) => (
+const mockedAction: genericThunkActionCreatorType = (arg1, arg2, arg3) => (
   dispatch => {
     try {
       // ...
@@ -47,7 +49,7 @@ const mockedAction = (arg1, arg2, arg3) => (
 
 const args = [1, 2, 3];
 
-const expectedAction = {
+const expectedAction: snapshotErrorType = {
   error: 'Something went wrong',
   action: mockedAction,
   args,

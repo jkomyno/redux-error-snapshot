@@ -1,9 +1,11 @@
 // @flow
 import type { ThunkAction } from 'redux-thunk';
 
+export type genericThunkActionCreatorType = (...args: Array<any>) => ThunkAction<void, {reducerName: lastActionType}>;
+
 export type snapshotErrorType = {
   +error?: string,
-  +action?: (...args: Array<any>) => ThunkAction,
+  +action?: genericThunkActionCreatorType,
   +args?: Array<any>,
   +meta?: {
     [string]: any,
@@ -11,7 +13,7 @@ export type snapshotErrorType = {
 };
 
 export type lastActionType =
-  & { +type: string }
+  & { type: string }
   & snapshotErrorType;
 
 export type reducerType = (state?: snapshotErrorType, lastAction: lastActionType) =>
