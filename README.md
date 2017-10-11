@@ -11,6 +11,14 @@ Redux thunk utility that aims to ease the process of retrying last failed action
 
 Since v1.0.1 this package follows the rules of [Semantic versioning](http://semver.org/).
 
+## Description
+
+Every time a dispatched action has an `error` property, `redux-error-snapshot` takes care of
+saving a snapshot of the error'd state in its reducer, which is exposed to the user, and also
+provides a set of utilities to try again the last failed action with the same exact arguments.
+The user can also decide to *hide* some actions (which have the property `error`) to the reducer:
+for more informations about this possibility, checkout [**reducerCreator**](#reducercreator).
+
 ## Install
 
 - `yarn add redux-error-snapshot`
@@ -29,14 +37,50 @@ It requires [redux-thunk](https://github.com/gaearon/redux-thunk) to leverage it
 
 Here's what this module provides out of the box:
 
-### Reducer
+Reducer
+-------
 
 ```js
 import { reducer as errorSnapshot } from 'redux-error-snapshot';
 ```
 
 **You have to import it inside your store manually**. The simplest way would be adding it
-as argument in your combineReducers function. For reference, take a look [here](http://redux.js.org/docs/api/combineReducers.html).
+as argument in your combineReducers function, like showed in the example below.
+For reference, take a look [here](http://redux.js.org/docs/api/combineReducers.html).
+
+```js
+// reducers.js
+import { combineReducers } from 'redux';
+import { reducer as form } from 'redux-form';
+import { reducer as errorSnapshot } from 'redux-error-snapshot';
+import todo from './todo';
+
+const rootReducer = combineReducers({
+  errorSnapshot,
+  todo,
+});
+
+export default rootReducer;
+```
+
+```js
+// store.js
+import {
+  createStore,
+  applyMiddleware,
+} from 'redux';
+import thunk from 'redux-thunk';
+import reducers from './reducers';
+
+const initialState = {};
+const store = createStore(
+  reducers,
+  initialState,
+  applyMiddleware(thunk),
+);
+
+export default store;
+```
 
 It contains the snapshot of the last catched error situation in the app, so you have:
 - `error`: the error message
@@ -102,7 +146,41 @@ Note that you can store what you want in `meta`, and since v1.2.1 you can simply
 +export default connect(mapStateToProps, { retryLastAction })(YourComponent); 
 ```
 
-### Actions
+reducerCreator
+--------------
+
+You can also decide to *hide* some actions which have the property `error`.
+You just need to define a blacklist array with the types' RegEx patterns.
+Every action whose type dispatched matches one of the patterns of the blacklist
+is automagically ignored by the reducer.
+
+Note that `reducerCreator` has this name because it is a curried function which accepts an array
+of strings as only parameter, and returns the same reducer described above.
+
+Example:
+
+```js
+// reducers.js
+import { combineReducers } from 'redux';
+import { reducer as form } from 'redux-form';
+import { reducerCreator as errorSnapshotCreator } from 'redux-error-snapshot';
+import todo from './todo';
+
+const rootReducer = combineReducers({
+  /*
+  force redux-error-snapshot to ignore actions with types such as
+  '@@redux-form/SUBMIT_FAILED'
+  */
+  errorSnapshot: errorSnapshotCreator(['@@redux-form/*']),
+  form,
+  todo,
+});
+
+export default rootReducer;
+```
+
+Actions
+-------
 
 ```js
 import {
