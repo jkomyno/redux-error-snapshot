@@ -9,6 +9,7 @@ import reducer, {
   initialState,
   reducerCreator,
 } from '../src/reducer';
+import selector from '../src/selector';
 import { RESET_ERROR_STATE } from '../src/reduxTypes';
 import { defaultReducerName } from '../src/config';
 import type {
@@ -173,5 +174,33 @@ describe('reducerCreator', () => {
       expectedAction, { type: '@@redux-form/STOP_SUBMIT' },
     )))
       .toEqual(initialState);
+  });
+});
+
+describe('selector', () => {
+  it('should select the properties from the reducer', () => {
+    const defaultReducerNameStatePlain = {
+      error: 'Random error',
+      args: [],
+      meta: {
+        a: 'b',
+      },
+    };
+
+    const notDefaultStatePlain = {
+      error: 'Some error',
+      args: [1, 2, 3],
+      meta: {
+        c: 'd',
+      },
+    };
+
+    const store = mockStore({
+      [defaultReducerName]: defaultReducerNameStatePlain,
+      notDefault: notDefaultStatePlain,
+    });
+
+    expect(selector(store.getState())).toEqual(defaultReducerNameStatePlain);
+    expect(selector(store.getState(), 'notDefault')).toEqual(notDefaultStatePlain);
   });
 });
