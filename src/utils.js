@@ -14,6 +14,6 @@ export const existsIn: existsInType = (value, array) =>
 /**
  * Returns a selector to the the specified `property` of the reducer `reducerName`
  */
-export const selectProperty: selectorCreatorType = (property) =>
+export const selectProperty: selectorCreatorType = property =>
   (state, reducerName = defaultReducerName) =>
     state[reducerName][property];

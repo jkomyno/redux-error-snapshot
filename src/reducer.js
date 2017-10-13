@@ -9,6 +9,7 @@ import type {
 
 export const initialState: snapshotErrorType = {
   meta: {},
+  args: [],
 };
 
 const reducer: reducerType = (state = initialState, lastAction) => {

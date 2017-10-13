@@ -11,7 +11,24 @@ Redux thunk utility that aims to ease the process of retrying last failed action
 
 Since v1.0.1 this package follows the rules of [Semantic versioning](http://semver.org/).
 
-## Description
+## Table of Contents
+
+- [Overview](#overview)
+- [Installation](#installation)
+- [Motivation](#motivation)
+- [Api reference](#api-reference)
+  - [reducer](#reducer)
+    - [reducerCreator](#reducercreator)
+  - [actions](#actions)
+    - [resetErrorState](#reseterrorstate)
+    - [retryLastAction](#retrylastaction)
+  - [selector](#selector)
+- [Typings](#typings)
+- [Available scripts](#available-scripts)
+- [Related Projects](#related-projects)
+- [License](#license)
+
+## Overview
 
 Every time a dispatched action has an `error` property, `redux-error-snapshot` takes care of
 saving a snapshot of the error'd state in its reducer, which is exposed to the user, and also
@@ -19,7 +36,7 @@ provides a set of utilities to try again the last failed action with the same ex
 The user can also decide to *hide* some actions (which have the property `error`) to the reducer:
 for more informations about this possibility, checkout [**reducerCreator**](#reducercreator).
 
-## Install
+## Installation
 
 - `yarn add redux-error-snapshot`
 
@@ -27,18 +44,44 @@ Or, if you prefer using npm ([but you shouldn't](https://medium.com/@kaayru/what
 
 - `npm i -S redux-error-snapshot`
 
-## Why
+It requires [redux-thunk](https://github.com/gaearon/redux-thunk) since this library leverages its
+`getState()` and `dispatch()` methods.
 
-Because I found myself writing quite the same logic for handling the classic
-`Generic Error: press to try again` button / popup in different apps.
-It requires [redux-thunk](https://github.com/gaearon/redux-thunk) to leverage its getState() and dispatch() methods, which I'm fond of.
+You also need [reselect](https://github.com/reactjs/reselect) if you want to use the selector
+provided.
 
-## What you get
+## Motivation
 
-Here's what this module provides out of the box:
+*Why did you create this library?*, you may ask?
+The reason is that I found myself writing quite the same logic for handling the classic
+`Generic Error: press to try again` button / popup in different apps. When you continuosly
+repeat something, there's certainly room for improvement, so here's my shot with this little
+package, that hopefully will be usuful to somebody else as well.
 
-Reducer
--------
+## API reference
+
+```js
+import {
+  resetErrorState,
+  retryLastAction,
+  reducerCreator,
+  reducer as errorSnapshot,
+  selector as getErrorSnapshot,
+} from 'redux-error-snapshot';
+```
+
+- **Actions**:
+  - `resetErrorState: ()`
+  - `retryLastAction: (reducerName = 'errorSnapshot')`
+
+- **Reducer**:
+  - `errorSnapshot: (state = INITIAL_STATE, action)`
+  - `reducerCreator: (blacklist = [])`
+
+- **Selector**:
+  - `getErrorSnapshot: (store.getState(), reducerName = 'errorSnapshot')`
+
+### Reducer
 
 ```js
 import { reducer as errorSnapshot } from 'redux-error-snapshot';
@@ -86,17 +129,18 @@ It contains the snapshot of the last catched error situation in the app, so you 
 - `error`: the error message
 - `action`: the function that failed last time
 - `args`: the same arguments passed to the action that failed
-- `meta`: object which is guaranteed to be never null, but at least `{}`
+- `meta`: general object
 
 The initialState of the reducer is defined as following:
 
 ```js
 initialState = {
   meta: {},
+  args: [],
 };
 ```
 
-#### How to correctly put values in this library's reducer:
+How to correctly populate the reducer:
 
 ```js
   const yourThunkAction = (arg1, arg2) =>
@@ -113,6 +157,7 @@ initialState = {
         dispatch({
           type: 'YOUR_ERROR_TYPE',
           action: yourThunkAction,
+          // you need and `error` string property to create a snapshot
           error: 'Oops, something went wrong while executing yourThunkAction',
           args: [arg1, arg2],
           meta,
@@ -146,8 +191,11 @@ Note that you can store what you want in `meta`, and since v1.2.1 you can simply
 +export default connect(mapStateToProps, { retryLastAction })(YourComponent); 
 ```
 
-reducerCreator
---------------
+### reducerCreator
+
+```js
+import { reducerCreator as errorSnapshotCreator } from 'redux-error-snapshot';
+```
 
 You can also decide to *hide* some actions which have the property `error`.
 You just need to define a blacklist array with the types' RegEx patterns.
@@ -179,8 +227,7 @@ const rootReducer = combineReducers({
 export default rootReducer;
 ```
 
-Actions
--------
+### Actions
 
 ```js
 import {
@@ -189,9 +236,13 @@ import {
 } from 'redux-error-snapshot';
 ```
 
+The available actions are:
+
 - `resetErrorState`: sets the errorSnapshot reducer to `initialState`, returning the type `RESET_ERROR_STATE`.
 - `retryLastAction`: dispatches the action saved in the errorSnapshot reducer. If you have decided to import
-the reducer with a name different than `errorSnapshot`, you can pass its name as argument. E.g.:
+the reducer with a name different than `errorSnapshot`, you can pass its name as argument.
+
+Example:
 
 ```js
 import { reducer as MyErrorReducer } from 'redux-error-snapshot';
@@ -199,8 +250,23 @@ import { retryLastAction } from 'redux-error-snapshot';
 
 // ...
 
-dispatch(retryLastAction('MyErrorReducer'));
+dispatch(retryLastAction('MyErrorReducer')); // automatically resets the reducer state
 ```
+
+### Selector
+
+```js
+import { selector as getErrorSnapshot } from 'redux-error-snapshot';
+```
+
+Selectors are an efficient and composable way of extracting data from a reducer (you can take a
+look at the awesome documentation provided by [reselect](https://github.com/reactjs/reselect)
+about selectors).
+The first argument of a selector is familiar to many redux developers, since it expects
+`store.getState()`. The next argument however, is optional: again, if you have decided to import
+the reducer with a name different than `errorSnapshot`, you can pass its name as second argument.
+
+Example:
 
 ## Typings
 
@@ -223,6 +289,11 @@ opening a Pull Request.
 You can build your own light version of setting the env.targets property in .babelrc to `"node": "current"`.
 The version deployed to npm requires NodeJS 6.11.3, which is the current LTS as of September 2017.
 
+## Related Projects
+
+- [redux-error-snapshot-immutable](https://github.com/jkomyno/redux-error-snapshot-immutable):
+  it's essentially a fork of this library which uses [immutable](https://github.com/facebook/immutable).
+
 ## License
 
-[MIT](LICENSE)
+This project is [MIT](LICENSE) licensed.

@@ -1,7 +1,9 @@
+/* eslint-disable no-use-before-define */
 // @flow
 import type { ThunkAction } from 'redux-thunk';
 
-export type genericThunkActionCreatorType = (...args: Array<any>) => ThunkAction<void, {reducerName: lastActionType}>;
+export type genericThunkActionCreatorType = (...args: Array<any>) =>
+  ThunkAction<void, {reducerName: lastActionType}>;
 
 export type snapshotErrorType = {
   +error?: string,
